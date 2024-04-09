@@ -1,0 +1,63 @@
+1.
+ SELECT AVG( DataUsed) FROM CustomerInteractions
+    WHERE Month='March' AND YEAR=2024;
+    SELECT CUSTOMERID,AVG(DataUsed) FROM CustomerInteractions
+    WHERE AVG(DataUsed)>2.924999952316284;
+
+
+
+
+2.
+ SELECT CUSTOMERID FROM CustomerInteractions
+    WHERE MONTH="MARCH" AND CallDuration>ANY(SELECT CallDuration FROM CustomerInteractions WHERE MONTH="FEBRUARY");
+
+3.SELECT CUSTOMERID FROM CustomerInteractions
+   GROUP BY CUSTOMERID HAVING AVG( MessageCount)<92.8571 OR AVG(DATAUSED)>2.4285713945116316;
+
+
+4.
+  SELECT ProductTypeID,SUM(TotalSalesAmount) FROM QuarterlySales
+   GROUP BY ProductTypeID;
+SELECT ProductTypeID,SUM(TotalSalesAmount) FROM QuarterlySales
+   WHERE  ProductTypeID=1;
+     
+
+
+5.SELECT ProductTypeID,SUM(TotalSalesAmount) FROM QuarterlySales
+WHERE QUARTER="Q1"
+GROUP BY ProductTypeID
+ORDER BY SUM(TOTALSALESAMOUNT) DESC LIMIT 1;
+
+
+6.SELECT ProductTypeID,AVG(TotalSalesAmount/UnitsSold) AS AVG_PER_UNIT FROM QuarterlySales
+WHERE  ProductTypeID=1 AND QUARTER="Q2"
+GROUP BY ProductTypeID;
+
+
+
+7.
+SELECT AVG(ConsumptionKWh) FROM SectorEnergyConsumptioN;
+SELECT Region FROM SectorEnergyConsumptioN
+WHERE MONTH="MARCH" AND (EnergySource='Solar' OR EnergySource='WIND') AND ConsumptionKWh>157142.8571;
+
+
+8.
+SELECT SectOR,ConsumptionKWh FROM SectorEnergyConsumptioN
+WHERE MONTH="MARCH" AND ConsumptionKWh<200000 OR ConsumptionKWh<400000 OR ConsumptionKWh<5000;
+
+
+9. SELECT EnergySource,AVG(ConsumptionKWh) FROM SectorEnergyConsumptioN
+ GROUP BY EnergySource;
+
+
+10.
+ SELECT AVG(FEEDBACKSCORE) FROM InsuranceActivities;
+ SELECT CustomerName FROM InsuranceActivities
+WHERE FEEDBACKSCORE>8.0000 AND INVESTIGATION="NO" AND CLAIMSCOUNT<>0;
+
+
+11.
+
+
+
+12.
