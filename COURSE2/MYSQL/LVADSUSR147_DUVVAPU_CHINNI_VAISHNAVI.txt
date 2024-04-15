@@ -1,0 +1,62 @@
+##
+## CUME_DIST()
+##
+
+
+SELECT 
+  name, 
+  score, 
+  ROW_NUMBER() OVER (
+    ORDER BY 
+      score
+  ) row_num, 
+  CUME_DIST() OVER (
+    ORDER BY 
+      score
+  ) cume_dist_val 
+FROM 
+  scores;
+
+-- ###############################
+--  Total Number of Rows 10, Values less than or equal to 55 is 2,  CUME_DIST()=  2/10 = .2 or 20%
+--  Total Number of Rows 10, Values less than or equal to 62 is 4,  CUME_DIST()=  4/10 = .4 or 40%
+
+-- ###############################
+
+
+-- Example 1
+/* calculate the cumulative distribution of sales representatives based on their achieved sales amounts 
+compared to their targets */
+
+SELECT rep_name, target_sales, achieved_sales, 
+       CUME_DIST() OVER (ORDER BY achieved_sales / target_sales DESC) AS cume_distribution
+FROM sales_representatives_target;
+
+-- Example 2:
+/*Calculate the cumulative distribution of students based on their exam scores? */
+
+SELECT student_name, exam_score, 
+       CUME_DIST() OVER (ORDER BY exam_score DESC) AS cume_dists
+FROM students;
+
+-- Example - 3
+/*  calculate the cumulative distribution of products based on their prices */
+SELECT product_name, price, 
+       CUME_DIST() OVER (ORDER BY price) AS cume_dists 
+FROM products;
+
+-- Example 4
+/* calculate the cumulative distribution of customers based on their order amount */
+SELECT customer_name, total_orders, 
+       CUME_DIST() OVER (ORDER BY total_orders DESC) AS cume_dists
+FROM customers;
+
+
+-- Example 5
+/* calculate the cumulative distribution of employees based on their performance ratings */
+SELECT employee_name, performance_rating, 
+       CUME_DIST() OVER (ORDER BY performance_rating DESC) AS cume_dists
+FROM employees_ratings;
+
+
+
