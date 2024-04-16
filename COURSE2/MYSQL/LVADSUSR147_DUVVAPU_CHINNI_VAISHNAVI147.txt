@@ -1,0 +1,163 @@
+1.
+select a.product_category,a.product_id,a.product_name,avg(b.sales_amount)
+from products a
+join sales_records b using(product_id)
+where b.sales_date between "2024-03-01" and "2024-03-31"
+group by a.product_category,a.product_id,product_name
+order by a.product_category;
+
+2.
+select a.course_name,b.enrollment_year,count(c.student_id)
+from courses a
+join enrollments c using(course_id)
+join students b using(student_id)
+group by a.course_name,b.enrollment_year
+order by count(c.student_id) desc,b.enrollment_year desc
+limit 3;
+
+
+3.
+with a1 as (
+select a.customer_id as customerid,a.customer_name as customername,sum(b.sales_amount) as total,
+cume_dist() over (partition by a.customer_id order by sum(b.sales_amount) desc)*100 as contribution
+from customers as a
+join sales_records as b using(customer_id)
+group by a.customer_id,a.customer_name
+)
+select customerid,customername,contribution,
+rank() over (partition by customerid order by total desc) as ranks
+from a1;
+
+
+4.
+select a.customer_id,a.customer_name,
+case 
+when month(b.sales_date) in (2,1,12,11,10,9) then "consistent buyers"
+else "occasional buyers"
+end as customer_category
+from customers a
+join sales_records b on b.customer_id=a.customer_id;
+
+5.
+select concat(a.departure_airport,"-",a.arrival_airport) as flight_route,avg(b.ticket_price) as avg_ticket_price
+from flights a 
+join tickets b using(flight_id)
+group by concat(a.departure_airport,"-",a.arrival_airport);
+
+
+6.
+select a.flight_number,a.departure_date,count(b.ticket_id)
+from flights a
+join tickets b using(flight_id)
+group by a.flight_number,a.departure_date;
+
+7.
+select a.passenger_name,sum(b.ticket_price) as total_amount_spend,a.frequent_flyer_status
+from passengers a
+join tickets b using(passenger_id)
+group by a.passenger_name,a.frequent_flyer_status
+order by sum(b.ticket_price) desc
+limit 5;
+
+
+8.
+select monthname(ticket_date)as month,month(ticket_date) as month_number,count(ticket_id) as tickets_sold
+from tickets
+group by monthname(ticket_date),month(ticket_date)
+order by count(ticket_id) desc
+limit 1;
+
+9.
+select a.player_id,a.player_name,c.game_genre,avg(b.play_date-a.registration_date) as avg_play_time
+from players a
+join playerscores b using(player_id)
+join games c using(game_id)
+group by a.player_id,a.player_name,c.game_genre
+order by avg(b.play_date-a.registration_date) desc;
+
+10.
+select a.game_id,a.game_name,count(b.player_id) as total_players
+from games a
+join playerscores b using(game_id)
+group by a.game_id,a.game_name
+order by count(b.player_id) desc
+limit 3;
+
+11.
+select a.game_id,a.game_name,avg(score) as avg_score ,max(score) as highest_score,count(b.player_id) as total_players
+from games a
+join playerscores b using(game_id)
+group by a.game_id,a.game_name;
+
+12.
+select a.player_id,a.player_name,a.registration_date,max(b.play_date) as last_active_date
+from players a
+join playerscores b using(player_id)
+group by a.player_id,a.player_name,a.registration_date
+having max(b.play_date)<"2023-03-01" and max(b.play_date) is  not null;
+
+13.
+select a.doctor_id,a.doctor_name,sum(b.cost) as total_cost
+from doctors a
+join treatments b using(doctor_id)
+group by a.doctor_id,a.doctor_name
+order by sum(b.cost) desc
+limit 5;
+
+14.
+select treatment_name,sum(cost) as total_revenue,
+cume_dist() over (partition by treatment_name order by sum(cost)) as contribution
+from treatments
+group by treatment_name
+
+
+
+15.
+select patient_id,patient_name,admission_date,discharge_date
+from patients ;
+select a.patient_id,a.patient_name,a.admission_date,a.discharge_date
+from patients a
+join patients b
+where b.admission_date>a.discharge_date and not( b.admission_date>a.discharge_date+30);
+
+16.
+select gender,diagnosis,round( avg(discharge_date-admission_date)) as avg_length_of_stay
+from patients
+group by gender,diagnosis
+order by gender;
+
+17.
+select department,semester,avg(grade) as avg_grade
+from courses a
+join enrollments b using(course_id)
+group by department,semester
+order by department,semester;
+
+18.
+select a.major,a.enrollment_year,count(b.student_id)
+from enrollments b
+join students a using(student_id)
+group by a.major,a.enrollment_year
+order by count(b.student_id) desc
+
+
+19.
+select a.student_id,a.student_name,b.semester,sum(c.credits)
+from students a
+join enrollments b using(student_id)
+join courses c using(course_id)
+group by b.semester,a.student_id,a.student_name
+having sum(c.credits)>50;
+
+20.
+select a.course_name,b.enrollment_year,count(c.student_id)
+from courses a
+join enrollments c using(course_id)
+join students b using(student_id)
+group by a.course_name,b.enrollment_year
+order by count(c.student_id) desc,b.enrollment_year desc
+limit 3
+
+
+
+
